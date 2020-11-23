@@ -12,11 +12,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class LocationListActivity extends AppCompatActivity {
 DBHelper dbHelper;
 ListView l_view;
 ArrayList<String> alldata=new ArrayList<>();
+HashSet<String> hashSet = new HashSet<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,9 @@ ArrayList<String> alldata=new ArrayList<>();
         dbHelper=new DBHelper(LocationListActivity.this);
         try{
             alldata=dbHelper.getAllCotacts();
+            hashSet.addAll(alldata);
+            alldata.clear();
+            alldata.addAll(hashSet);
             if (alldata==null){
                 Toast.makeText(LocationListActivity.this, "No data To show", Toast.LENGTH_SHORT).show();
             }
@@ -36,8 +42,11 @@ ArrayList<String> alldata=new ArrayList<>();
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         l_view.getSelectedItem();
 
-                        String BrandSelected = l_view.getItemAtPosition(position).toString().trim();
-                        Toast.makeText(LocationListActivity.this, "value:  "+BrandSelected, Toast.LENGTH_SHORT).show();
+                        String ValueSelected = l_view.getItemAtPosition(position).toString().trim();
+                        Intent intent=new Intent(LocationListActivity.this,MapsActivity.class);
+                        intent.putExtra("value",ValueSelected);
+                        startActivity(intent);
+                      //  Toast.makeText(LocationListActivity.this, "value:  "+BrandSelected, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

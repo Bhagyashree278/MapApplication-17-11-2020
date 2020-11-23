@@ -158,21 +158,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             allocation.add(location);
             dbclass.insertContact(location);
             List<Address> addressList = null;
-
-            if (location != null || !location.equals("")) {
                 Geocoder geocoder = new Geocoder(this);
                 try {
                     addressList = geocoder.getFromLocationName(location, 1);
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                    Toast.makeText(getApplicationContext(), address.getLatitude() + " " + address.getLongitude(), Toast.LENGTH_LONG).show();
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                Toast.makeText(getApplicationContext(),address.getLatitude()+" "+address.getLongitude(), Toast.LENGTH_LONG).show();
-            }
+
+
         }
         public void gotolistclass(View view){
             Intent intent=new Intent(MainActivity.this,LocationListActivity.class);
